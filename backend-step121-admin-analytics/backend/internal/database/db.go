@@ -37,6 +37,7 @@ func Connect() {
 	if err != nil {
 		log.Fatal("❌ Ошибка доступа к SQL БД:", err)
 	}
+
 	configureConnectionPool(sqlDB)
 
 	if err := RunEmbeddedMigrations(sqlDB); err != nil {
@@ -81,6 +82,10 @@ func Connect() {
 		log.Fatal("❌ Ошибка миграции БД:", err)
 	}
 
+	if err := registerNotificationPushHook(); err != nil {
+		log.Fatal("❌ Ошибка регистрации push-хука уведомлений:", err)
+	}
+
 	log.Println("✅ База данных подключена и синхронизирована")
 }
 
@@ -88,6 +93,7 @@ func configureConnectionPool(db *sql.DB) {
 	if db == nil {
 		return
 	}
+
 	maxOpen := intEnv("DB_MAX_OPEN_CONNS", 40)
 	maxIdle := intEnv("DB_MAX_IDLE_CONNS", 20)
 	maxLifetimeMinutes := intEnv("DB_CONN_MAX_LIFETIME_MIN", 30)

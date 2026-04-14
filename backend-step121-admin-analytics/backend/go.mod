@@ -3,6 +3,7 @@ module friendscape
 go 1.23.0
 
 require (
+	github.com/SherClockHolmes/webpush-go v1.4.0
 	github.com/gin-contrib/cors v1.7.6
 	github.com/gin-gonic/gin v1.12.0
 	github.com/golang-jwt/jwt/v5 v5.3.1
