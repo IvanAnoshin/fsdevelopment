@@ -1,0 +1,7 @@
+@import './styles/post-auth/core.css';
+@import './styles/post-auth/feed.css';
+@import './styles/post-auth/messages.css';
+@import './styles/post-auth/people.css';
+@import './styles/post-auth/profile.css';
+@import './styles/post-auth/notifications-settings.css';
+@import './styles/post-auth/shared.css';

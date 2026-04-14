@@ -1,0 +1,8 @@
+window.__FRIENDSCAPE_CONFIG__ = {
+  apiBaseUrl: 'https://api.example.com/api',
+  webrtcIceServersJSON: '[{"urls":["stun:turn.example.com:3478"]}]',
+  webrtcIceTransportPolicy: 'all',
+  webrtcBundlePolicy: 'max-bundle',
+  webrtcRtcpMuxPolicy: 'require',
+  webrtcIceCandidatePoolSize: '6',
+};

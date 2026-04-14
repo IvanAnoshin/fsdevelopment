@@ -1,0 +1,250 @@
+/* step25: visual migration for people */
+.pa-people-page {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pa-people-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.pa-people-hero::after {
+  content: "";
+  position: absolute;
+  right: -28px;
+  top: -24px;
+  width: 140px;
+  height: 140px;
+  border-radius: 36px;
+  background: linear-gradient(135deg, rgba(10,132,255,.10), rgba(109,94,252,.16));
+  transform: rotate(18deg);
+}
+
+.pa-people-hero-main,
+.pa-people-hero-side {
+  position: relative;
+  z-index: 1;
+}
+
+.pa-people-hero-title {
+  margin-top: 10px;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--pa-text);
+}
+
+.pa-people-hero-text {
+  margin-top: 8px;
+  max-width: 540px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: #4b5563;
+}
+
+.pa-people-stat-row {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.pa-people-stat-card {
+  padding: 12px;
+  border-radius: 18px;
+  background: rgba(255,255,255,.74);
+  border: 1px solid rgba(255,255,255,.82);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.82), 0 4px 10px rgba(0,0,0,.04);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pa-people-stat-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--pa-text);
+}
+
+.pa-people-stat-label {
+  font-size: 11px;
+  color: var(--pa-muted);
+  font-weight: 700;
+}
+
+.pa-people-hero-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  min-width: 132px;
+}
+
+.pa-people-avatar-stack {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.pa-people-stack-avatar {
+  width: 42px;
+  height: 42px;
+  margin-left: -10px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,.92);
+  background: linear-gradient(180deg, #ececf1, #d8d8df);
+  box-shadow: 0 6px 14px rgba(0,0,0,.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #2d3346;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.pa-people-stack-avatar:first-child { margin-left: 0; }
+
+.pa-people-side-note {
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: rgba(109,94,252,.12);
+  color: var(--pa-accent);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.pa-people-side-caption {
+  max-width: 140px;
+  text-align: right;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--pa-muted);
+}
+
+.pa-people-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pa-people-toolbar-row {
+  align-items: center;
+  justify-content: space-between;
+}
+
+.pa-people-search {
+  min-height: 46px;
+}
+
+.pa-people-filter-row {
+  margin-top: 0;
+}
+
+.pa-people-section-head {
+  margin-top: 0;
+}
+
+.pa-people-empty {
+  text-align: center;
+}
+
+.pa-people-list-redesign {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pa-people-card-redesign {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-radius: 26px;
+}
+
+.pa-people-card-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: start;
+}
+
+.pa-people-card-main {
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  text-align: left;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  cursor: pointer;
+}
+
+.pa-people-avatar {
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+}
+
+.pa-people-card-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pa-people-card-score {
+  min-width: 40px;
+  height: 30px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: rgba(109,94,252,.10);
+  color: var(--pa-accent);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .04em;
+}
+
+.pa-people-card-tags {
+  gap: 8px;
+}
+
+.pa-people-card-actions {
+  border-top: 1px solid rgba(255,255,255,.72);
+  padding-top: 12px;
+}
+
+@media (max-width: 640px) {
+  .pa-people-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .pa-people-hero-side {
+    align-items: flex-start;
+  }
+
+  .pa-people-side-caption {
+    text-align: left;
+    max-width: none;
+  }
+
+  .pa-people-card-top {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 420px) {
+  .pa-people-stat-row {
+    grid-template-columns: 1fr;
+  }
+}
+

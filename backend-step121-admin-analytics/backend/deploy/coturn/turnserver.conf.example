@@ -1,0 +1,32 @@
+# Friendscape coTURN example for stable 1-to-1 calls
+# Deploy TURN on a public IP or public hostname.
+# Replace turn.example.com and secrets before using in production.
+
+listening-port=3478
+tls-listening-port=5349
+fingerprint
+use-auth-secret
+static-auth-secret=CHANGE_ME_WITH_A_RANDOM_32_PLUS_CHAR_SECRET
+realm=turn.example.com
+server-name=turn.example.com
+
+# Public interface / NAT mapping
+# external-ip=YOUR_PUBLIC_IP
+# listening-ip=0.0.0.0
+
+# TLS for turns:
+cert=/etc/letsencrypt/live/turn.example.com/fullchain.pem
+pkey=/etc/letsencrypt/live/turn.example.com/privkey.pem
+
+# Relay port range (open this UDP/TCP range in firewall)
+min-port=49160
+max-port=49240
+
+# Safer defaults for WebRTC
+no-cli
+no-multicast-peers
+stale-nonce
+simple-log
+
+# Helpful when the TURN host is also the app host
+# no-loopback-peers
