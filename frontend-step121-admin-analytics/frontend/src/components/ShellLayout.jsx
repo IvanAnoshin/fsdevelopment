@@ -6,13 +6,46 @@ import { dispatchAppAction, getFriendRequests, getUnreadCount, showToast } from 
 import { getStoredUser, getToken } from '../services/authStorage';
 import { getRealtimeClient } from '../services/realtime';
 
+
+function SettingsGearIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d="M19.14 12.94c.04-.31.06-.63.06-.94s-.02-.63-.06-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.1 7.1 0 0 0-1.63-.94l-.36-2.54a.5.5 0 0 0-.5-.42h-3.84a.5.5 0 0 0-.5.42l-.36 2.54c-.57.23-1.12.55-1.63.94l-2.39-.96a.5.5 0 0 0-.6.22L2.71 8.84a.5.5 0 0 0 .12.64l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94l-2.03 1.58a.5.5 0 0 0-.12.64l1.92 3.32c.13.22.39.31.6.22l2.39-.96c.51.39 1.06.71 1.63.94l.36 2.54c.04.24.25.42.5.42h3.84c.25 0 .46-.18.5-.42l.36-2.54c.57-.23 1.12-.55 1.63-.94l2.39.96c.22.09.47 0 .6-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.03-1.58Z"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.9"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <circle
+        cx="12"
+        cy="12"
+        r="3.05"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.9"
+      />
+    </svg>
+  );
+}
+
+function getPrimaryNavPath(pathname = '') {
+  if (pathname.startsWith('/messages')) return '/messages';
+  if (pathname.startsWith('/profile') || pathname.startsWith('/saved')) return '/profile';
+  if (pathname.startsWith('/settings') || pathname.startsWith('/admin')) return '/settings/devices';
+  if (pathname.startsWith('/friends') || pathname.startsWith('/search')) return '/friends';
+  return '/feed';
+}
+
 function icon(path) {
   switch (path) {
     case '/feed': return <svg viewBox="0 0 24 24"><path d="M3 9L12 3L21 9L21 20H15V14H9V20H3V9Z"></path></svg>;
     case '/friends': return <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>;
     case '/messages': return <svg viewBox="0 0 24 24"><path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z"></path></svg>;
     case '/profile': return <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>;
-    default: return <svg viewBox="0 0 24 24"><path d="M4 7h16"></path><path d="M4 12h16"></path><path d="M4 17h16"></path></svg>;
+    case '/settings/devices': return <SettingsGearIcon />;
+    default: return <SettingsGearIcon />;
   }
 }
 
@@ -76,6 +109,7 @@ export default function ShellLayout() {
   const toastTimersRef = useRef(new Map());
   const previousLocationRef = useRef(`${location.pathname}${location.search}`);
   const scrollSaveRafRef = useRef(0);
+  const activeNavPath = useMemo(() => getPrimaryNavPath(location.pathname), [location.pathname]);
 
   useEffect(() => {
     document.body.classList.add('post-auth-mode');
@@ -388,6 +422,7 @@ export default function ShellLayout() {
     return () => window.clearTimeout(timerId);
   }, [location.pathname]);
 
+
   return (
     <div className={shellClassName}>
       <div className="pa-app">
@@ -400,7 +435,7 @@ export default function ShellLayout() {
         </div>
         <nav className="pa-bottom-nav" aria-label="Навигация">
           {items.map((item) => {
-            const active = location.pathname === item.path || (item.path === '/messages' && location.pathname.startsWith('/messages/')) || (item.path === '/profile' && location.pathname.startsWith('/profile')) || (item.path === '/settings/devices' && location.pathname.startsWith('/settings/devices'));
+            const active = activeNavPath === item.path;
             const badge = item.path === '/messages' ? messageUnread : item.path === '/friends' ? pendingRequests : 0;
             return (
               <button key={item.path} type="button" className={`pa-nav-btn ${active ? 'active' : ''}`} onClick={() => navigate(item.path)} aria-label={item.label} aria-current={active ? 'page' : undefined}>
