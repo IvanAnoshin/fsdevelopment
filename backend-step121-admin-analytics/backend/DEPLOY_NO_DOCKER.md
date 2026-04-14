@@ -28,7 +28,7 @@
 
 ## 5. nginx
 
-- Copy `deploy/nginx/friendscape-api.conf` to `/etc/nginx/sites-available/`
+- Copy the frontend nginx config to the server
 - Enable the site and reload nginx
 - Put TLS in front of it and terminate HTTPS there
 
