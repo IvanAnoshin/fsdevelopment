@@ -40,10 +40,6 @@ func Connect() {
 
 	configureConnectionPool(sqlDB)
 
-	if err := RunEmbeddedMigrations(sqlDB); err != nil {
-		log.Fatal("❌ Ошибка SQL-миграций:", err)
-	}
-
 	err = DB.AutoMigrate(
 		&models.User{},
 		&models.Community{},
@@ -80,6 +76,10 @@ func Connect() {
 	)
 	if err != nil {
 		log.Fatal("❌ Ошибка миграции БД:", err)
+	}
+
+	if err := RunEmbeddedMigrations(sqlDB); err != nil {
+		log.Fatal("❌ Ошибка SQL-миграций:", err)
 	}
 
 	if err := registerNotificationPushHook(); err != nil {
