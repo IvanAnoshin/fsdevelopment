@@ -1,6 +1,7 @@
 package media
 
 import (
+	"bytes"
 	"fmt"
 	"image"
 	"image/color"
@@ -35,6 +36,7 @@ func OptimizeImage(storage Storage, kind string, raw []byte, filename string, mi
 	if err != nil {
 		return nil, err
 	}
+
 	bounds := img.Bounds()
 	origW := bounds.Dx()
 	origH := bounds.Dy()
@@ -59,11 +61,14 @@ func OptimizeImage(storage Storage, kind string, raw []byte, filename string, mi
 		if err != nil {
 			return nil, err
 		}
+
 		variantName := variantLabel(width, idx, len(targetWidths))
 		key := ContentAddressKey(kind, hash, variantName, ext)
+
 		if err := storage.WriteObject(key, encoded); err != nil {
 			return nil, fmt.Errorf("write variant: %w", err)
 		}
+
 		variant := Variant{
 			Name:   variantName,
 			Width:  outW,
@@ -75,13 +80,16 @@ func OptimizeImage(storage Storage, kind string, raw []byte, filename string, mi
 		}
 		variants = append(variants, variant)
 		totalBytes += variant.Bytes
+
 		if preferredURL == "" || variantName == "display" {
 			preferredURL = variant.URL
 		}
 	}
+
 	if preferredURL == "" && len(variants) > 0 {
 		preferredURL = variants[len(variants)-1].URL
 	}
+
 	return &OptimizedAsset{
 		Hash:          hash,
 		Width:         origW,
@@ -98,9 +106,11 @@ func normalizedTargetWidths(origW int) []int {
 	if origW < maxStoredWidth {
 		maxStoredWidth = origW
 	}
+
 	candidates := []int{320, 640, 960, 1280, maxStoredWidth}
 	result := make([]int, 0, len(candidates)+1)
 	seen := map[int]struct{}{}
+
 	for _, width := range candidates {
 		if width <= 0 {
 			continue
@@ -111,15 +121,18 @@ func normalizedTargetWidths(origW int) []int {
 		seen[width] = struct{}{}
 		result = append(result, width)
 	}
+
 	if _, ok := seen[origW]; !ok {
 		result = append(result, origW)
 	}
+
 	if len(result) == 1 {
 		result[0] = origW
 	}
 	if len(result) == 0 {
 		result = []int{origW}
 	}
+
 	return result
 }
 
@@ -163,6 +176,7 @@ func jpegQuality() int {
 func encodeImage(img image.Image, format string, quality int) ([]byte, int, int, error) {
 	var buf bytes.Buffer
 	bounds := img.Bounds()
+
 	switch format {
 	case "png":
 		enc := png.Encoder{CompressionLevel: png.BestCompression}
@@ -174,6 +188,7 @@ func encodeImage(img image.Image, format string, quality int) ([]byte, int, int,
 			return nil, 0, 0, fmt.Errorf("encode jpeg: %w", err)
 		}
 	}
+
 	return buf.Bytes(), bounds.Dx(), bounds.Dy(), nil
 }
 
@@ -181,6 +196,7 @@ func detectAlpha(img image.Image) bool {
 	bounds := img.Bounds()
 	stepX := max(bounds.Dx()/24, 1)
 	stepY := max(bounds.Dy()/24, 1)
+
 	for y := bounds.Min.Y; y < bounds.Max.Y; y += stepY {
 		for x := bounds.Min.X; x < bounds.Max.X; x += stepX {
 			_, _, _, a := img.At(x, y).RGBA()
@@ -196,20 +212,25 @@ func resizeImage(src image.Image, targetW int) image.Image {
 	bounds := src.Bounds()
 	srcW := bounds.Dx()
 	srcH := bounds.Dy()
+
 	if targetW <= 0 || targetW >= srcW {
 		return src
 	}
+
 	ratio := float64(targetW) / float64(srcW)
 	targetH := int(math.Round(float64(srcH) * ratio))
 	if targetH < 1 {
 		targetH = 1
 	}
+
 	dst := image.NewRGBA(image.Rect(0, 0, targetW, targetH))
+
 	for y := 0; y < targetH; y++ {
 		sy := float64(y) * float64(srcH-1) / float64(max(targetH-1, 1))
 		y0 := int(math.Floor(sy))
 		y1 := min(y0+1, srcH-1)
 		fy := sy - float64(y0)
+
 		for x := 0; x < targetW; x++ {
 			sx := float64(x) * float64(srcW-1) / float64(max(targetW-1, 1))
 			x0 := int(math.Floor(sx))
@@ -225,9 +246,11 @@ func resizeImage(src image.Image, targetW int) image.Image {
 			g := bilerp(c00g, c10g, c01g, c11g, fx, fy)
 			b := bilerp(c00b, c10b, c01b, c11b, fx, fy)
 			a := bilerp(c00a, c10a, c01a, c11a, fx, fy)
+
 			dst.Set(x, y, colorRGBA64To8(r, g, b, a))
 		}
 	}
+
 	return dst
 }
 
@@ -238,7 +261,12 @@ func bilerp(c00, c10, c01, c11 uint32, fx, fy float64) uint32 {
 }
 
 func colorRGBA64To8(r, g, b, a uint32) color.RGBA {
-	return color.RGBA{R: uint8(r >> 8), G: uint8(g >> 8), B: uint8(b >> 8), A: uint8(a >> 8)}
+	return color.RGBA{
+		R: uint8(r >> 8),
+		G: uint8(g >> 8),
+		B: uint8(b >> 8),
+		A: uint8(a >> 8),
+	}
 }
 
 func min(a, b int) int {

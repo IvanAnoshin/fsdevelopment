@@ -121,6 +121,8 @@ func main() {
 	collectionHandler := handlers.NewCollectionHandler()
 	e2eeHandler := handlers.NewE2EEHandler()
 	storyHandler := handlers.NewStoryHandler()
+	communityHandler := handlers.NewCommunityHandler()
+	moderationHandler := handlers.NewModerationHandler()
 
 	serverPort := getEnv("PORT", "8080")
 	publicAppURL := getEnv("APP_PUBLIC_URL", "")

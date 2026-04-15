@@ -235,7 +235,7 @@ func (h *ChatWSHandler) Stream(c *gin.Context) {
 
 	conn.SetReadLimit(1 << 20)
 	_ = conn.SetReadDeadline(time.Now().Add(60 * time.Second))
-	_ = conn.SetPongHandler(func(string) error {
+	conn.SetPongHandler(func(string) error {
 		return conn.SetReadDeadline(time.Now().Add(60 * time.Second))
 	})
 

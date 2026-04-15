@@ -1,9 +1,6 @@
 package models
 
-import (
-	"encoding/json"
-	"time"
-)
+import "time"
 
 type Media struct {
 	ID        uint      `json:"id" gorm:"primaryKey"`
@@ -32,39 +29,6 @@ type SavePost struct {
 	CreatedAt time.Time `json:"created_at"`
 }
 
-type Story struct {
-	ID         uint      `json:"id" gorm:"primaryKey"`
-	UserID     uint      `json:"user_id" gorm:"index;not null"`
-	User       User      `json:"user" gorm:"foreignKey:UserID"`
-	Media      string    `json:"media"`
-	Text       string    `json:"text"`
-	Background string    `json:"background"`
-	Font       string    `json:"font"`
-	Views      int       `json:"views" gorm:"default:0"`
-	ExpiresAt  time.Time `json:"expires_at"`
-	CreatedAt  time.Time `json:"created_at"`
-}
-
-func (s *Story) GetMediaArray() []string {
-	var media []string
-	if s.Media != "" {
-		json.Unmarshal([]byte(s.Media), &media)
-	}
-	return media
-}
-
-func (s *Story) SetMediaArray(media []string) {
-	data, _ := json.Marshal(media)
-	s.Media = string(data)
-}
-
-type StoryView struct {
-	ID        uint      `json:"id" gorm:"primaryKey"`
-	StoryID   uint      `json:"story_id" gorm:"index;not null"`
-	UserID    uint      `json:"user_id" gorm:"index;not null"`
-	CreatedAt time.Time `json:"created_at"`
-}
-
 type Collection struct {
 	ID          uint      `json:"id" gorm:"primaryKey"`
 	UserID      uint      `json:"user_id" gorm:"index;not null"`
@@ -74,8 +38,7 @@ type Collection struct {
 	IsDefault   bool      `json:"is_default" gorm:"default:false"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
-
-	ItemsCount int `json:"items_count" gorm:"-"`
+	ItemsCount  int       `json:"items_count" gorm:"-"`
 }
 
 type CollectionItem struct {

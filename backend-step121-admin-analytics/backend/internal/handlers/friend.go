@@ -47,7 +47,7 @@ func (h *FriendHandler) SendFriendRequest(c *gin.Context) {
 	}
 
 	var existing models.Friendship
-	err := database.DB.Where(
+	err = database.DB.Where(
 		"(user_id = ? AND friend_id = ?) OR (user_id = ? AND friend_id = ?)",
 		userID, friendID, friendID, userID,
 	).First(&existing).Error
@@ -234,7 +234,7 @@ func (h *FriendHandler) Subscribe(c *gin.Context) {
 	}
 
 	var existing models.Subscription
-	err := database.DB.Where("subscriber_id = ? AND user_id = ?", userID, targetID).First(&existing).Error
+	err = database.DB.Where("subscriber_id = ? AND user_id = ?", userID, targetID).First(&existing).Error
 	if err == nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Уже подписан"})
 		return

@@ -5,6 +5,7 @@ import (
 	"encoding/csv"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"os"
 	"sort"
@@ -368,7 +369,7 @@ func (h *BehaviorHandler) ExportCompactDataset(c *gin.Context) {
 	c.Header("X-DFSN-Export-Schema", "dfsn-compact-v1")
 	c.Header("X-DFSN-Export-Limit", strconv.Itoa(filters.limit))
 
-	writerTarget := c.Writer
+	var writerTarget io.Writer = c.Writer
 	if filters.gzip {
 		filename += ".gz"
 		c.Header("Content-Type", "application/gzip")
